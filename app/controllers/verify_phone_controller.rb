@@ -32,6 +32,13 @@ class VerifyPhoneController < ApplicationController
                              code: params[:code]
                            )
 
-    puts verification_check.status
+    if verification_check.status == "approved"
+      user = User.find_by(number: params[:number])
+      if user.nil?
+        user = User.create(number: params[:number])
+      end
+      render json: user.to_json(only: [:uuid, :first_name, :last_name, :number])
+    end
+
   end
 end

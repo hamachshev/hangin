@@ -50,3 +50,7 @@ end
 gem "twilio-ruby", "~> 7.3"
 
 gem "dotenv", "~> 3.1"
+
+gem "doorkeeper", "~> 5.7"
+
+gem "pg", "~> 1.5"
