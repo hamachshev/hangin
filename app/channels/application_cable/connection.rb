@@ -3,16 +3,19 @@ module ApplicationCable
     identified_by :current_user
 
     def connect
-      self.current_user = find_verified_user
+      self.current_user = authenticate!
     end
 
-    private
-    def find_verified_user
-      if verified_user = User.find(doorkeeper_token.resource_owner_id)
-        verified_user
-      else
-        reject_unauthorized_connection
-      end
+    protected
+
+    def authenticate!
+      user = User.find_by(id: doorkeeper_token.try(:resource_owner_id))
+
+      (user && doorkeeper_token&.acceptable?(@_doorkeeper_scopes)) || reject_unauthorized_connection
+    end
+
+    def doorkeeper_token
+      ::Doorkeeper.authenticate(request)
     end
   end
 end

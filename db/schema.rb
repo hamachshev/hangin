@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_22_180122) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_22_230715) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "chats", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_chats_on_user_id"
+  end
 
   create_table "contacts", id: false, force: :cascade do |t|
     t.integer "user_id", null: false
@@ -43,6 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_22_180122) do
     t.datetime "created_at", null: false
     t.datetime "revoked_at"
     t.string "previous_refresh_token", default: "", null: false
+    t.integer "application_id"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
@@ -70,5 +78,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_22_180122) do
     t.boolean "online", default: false, null: false
   end
 
+  add_foreign_key "chats", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
 end

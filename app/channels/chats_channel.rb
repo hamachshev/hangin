@@ -7,4 +7,14 @@ class ChatsChannel < ApplicationCable::Channel
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
   end
+
+  def createChat
+    chat = current_user.chats_started.create!
+    current_user.contacts.each { |contact|
+      if contact.online?
+        ActionCable.server.broadcast "chats_channel#{contact.id}", data: chat.id
+      end
+    }
+
+  end
 end

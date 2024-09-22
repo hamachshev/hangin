@@ -5,4 +5,5 @@ class User < ApplicationRecord
                           join_table: "contacts",
                           foreign_key: "user_id",
                           association_foreign_key: "contact_id"
+  has_many :chats_started, class_name: "Chat"
 end

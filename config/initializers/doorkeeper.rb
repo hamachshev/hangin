@@ -13,6 +13,28 @@ Doorkeeper.configure do
     #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
   end
 
+  resource_owner_from_credentials do |routes|
+    account_sid = ENV['TWILIO_ACCOUNT_SID']
+    auth_token = ENV['TWILIO_AUTH_TOKEN']
+    @client = Twilio::REST::Client.new(account_sid, auth_token)
+    verification_check = @client
+                           .verify
+                           .v2
+                           .services('VA791034a44b0bc8e4fede66dfb91e7e1a')
+                           .verification_checks
+                           .create(
+                             to: '+1' + params[:number],
+                             code: params[:code]
+                           )
+
+    if verification_check.status == "approved"
+      user = User.find_by(number: params[:number])
+      if user.nil?
+        user = User.create(number: params[:number])
+      end
+    end
+    verification_check.status == "approved"
+  end
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
   # adding oauth authorized applications. In other case it will return 403 Forbidden response
@@ -80,7 +102,6 @@ Doorkeeper.configure do
   # Doorkeeper responds to a requests.
   #
   api_only
-  base_controller 'ActionController::API'
 
   # Enforce token request content type to application/x-www-form-urlencoded.
   # It is not enabled by default to not break prior versions of the gem.
@@ -97,7 +118,7 @@ Doorkeeper.configure do
   # Prefer access_token_expires_in 100.years or similar,
   # which would be functionally equivalent and avoid the risk of unexpected behavior by callers.
   #
-  access_token_expires_in 2.hours
+  # access_token_expires_in 2.hours
 
   # Assign custom TTL for access tokens. Will be used instead of access_token_expires_in
   # option if defined. In case the block returns `nil` value Doorkeeper fallbacks to
@@ -231,7 +252,7 @@ Doorkeeper.configure do
   # `grant_type` - the grant type of the request (see Doorkeeper::OAuth)
   # `scopes` - the requested scopes (see Doorkeeper::OAuth::Scopes)
   #
-  # use_refresh_token
+  use_refresh_token
 
   # Provide support for an owner to be assigned to each registered application (disabled by default)
   # Optional parameter confirmation: true (default: false) if you want to enforce ownership of
@@ -246,7 +267,7 @@ Doorkeeper.configure do
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
   # default_scopes  :public
-  # optional_scopes :write, :update
+ # optional_scopes :public
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.
@@ -300,7 +321,7 @@ Doorkeeper.configure do
   # forbid_redirect_uri { |uri| uri.scheme.to_s.downcase == 'javascript' }
 
   # Allows to set blank redirect URIs for Applications in case Doorkeeper configured
-  #   # to use URI-less OAuth grant flows like Client Credentials or Resource Owner
+  # to use URI-less OAuth grant flows like Client Credentials or Resource Owner
   # Password Credentials. The option is on by default and checks configured grant
   # types, but you **need** to manually drop `NOT NULL` constraint from `redirect_uri`
   # column for `oauth_applications` database table.
@@ -311,9 +332,9 @@ Doorkeeper.configure do
   #
   # Or you can define your custom check:
   #
-  # allow_blank_redirect_uri do
-  #   true
-  # end
+   allow_blank_redirect_uri do |grant_flows, client|
+     true
+  end
 
   # Specify how authorization errors should be handled.
   # By default, doorkeeper renders json errors when access token
@@ -368,7 +389,7 @@ Doorkeeper.configure do
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.2
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.3
   #
-  # grant_flows %w[authorization_code client_credentials]
+  grant_flows %w[password]
 
   # Allows to customize OAuth grant flows that +each+ application support.
   # You can configure a custom block (or use a class respond to `#call`) that must
@@ -466,9 +487,9 @@ Doorkeeper.configure do
   # so that the user skips the authorization step.
   # For example if dealing with a trusted application.
   #
-  skip_authorization do
-    true
-  end
+  # skip_authorization do |resource_owner, client|
+  #   client.superapp? or resource_owner.admin?
+  # end
 
   # Configure custom constraints for the Token Introspection request.
   # By default this configuration option allows to introspect a token by another
