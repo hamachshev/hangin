@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
     if user && user.first_name.nil? && user.last_name.nil?
       user.update(first_name: params[:first_name], last_name: params[:last_name])
-      render json: user.to_json(only: [:first_name, :last_name, :number, :uuid])
+      render json: user.to_json(only: [:first_name, :last_name, :number])
     end
   end
 
