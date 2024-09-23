@@ -11,7 +11,11 @@ module ApplicationCable
     def authenticate!
       user = User.find_by(id: doorkeeper_token.try(:resource_owner_id))
 
-      (user && doorkeeper_token&.acceptable?(@_doorkeeper_scopes)) || reject_unauthorized_connection
+      if user && doorkeeper_token&.acceptable?(@_doorkeeper_scopes)
+      user
+      else
+      reject_unauthorized_connection
+      end
     end
 
     def doorkeeper_token

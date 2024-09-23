@@ -26,14 +26,14 @@ Doorkeeper.configure do
                              to: '+1' + params[:number],
                              code: params[:code]
                            )
-
+    user = nil
     if verification_check.status == "approved"
       user = User.find_by(number: params[:number])
       if user.nil?
         user = User.create(number: params[:number])
       end
     end
-    verification_check.status == "approved"
+    user
   end
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
