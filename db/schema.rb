@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_22_230715) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_23_225050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -25,6 +25,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_22_230715) do
   create_table "contacts", id: false, force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "contact_id", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.integer "kind", null: false
+    t.integer "status", null: false
+    t.bigint "user_id", null: false
+    t.bigint "chat_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -79,5 +91,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_22_230715) do
   end
 
   add_foreign_key "chats", "users"
+  add_foreign_key "messages", "chats"
+  add_foreign_key "messages", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
 end
