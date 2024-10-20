@@ -2,14 +2,24 @@ default: &default
   adapter: postgresql
   encoding: unicode
   username: postgres
-  password: postgres
-  url: http://localhost:5432
+  password: 7SJ0dczOVIbWA0vBidJA
+  host: hangin-db.cp8eaics0ilp.us-east-1.rds.amazonaws.com
+  port: 5432
+#  password: postgres
+#  url: http://localhost:5432
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
 development:
-  <<: *default
-  database: hangin
+    adapter: postgresql
+    encoding: unicode
+    username: postgres
+    port: 5432
+    password: postgres
+    url: http://localhost:5432
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    timeout: 5000
+    database: hangin
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

@@ -8,5 +8,7 @@ Rails.application.routes.draw do
   # post "/verify" => "verify_phone#verify"
   post "/finalize" => "users#add_name"
 
+  root "pages#index"
+
 
 end

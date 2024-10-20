@@ -456,10 +456,11 @@ Doorkeeper.configure do
   # before_successful_strategy_response do |request|
   #   puts "BEFORE HOOK FIRED! #{request}"
   # end
-  #
-  # after_successful_strategy_response do |request, response|
-  #   puts "AFTER HOOK FIRED! #{request}, #{response}"
-  # end
+
+  # suggested by https://github.com/doorkeeper-gem/doorkeeper/pull/1032 and elaborated by chatgpt with prompt "after sucessful response doorkeeper"
+  after_successful_strategy_response do |request, response|
+    response.body[:uuid] = request.resource_owner.uuid
+  end
 
   # Hook into Authorization flow in order to implement Single Sign Out
   # or add any other functionality. Inside the block you have an access

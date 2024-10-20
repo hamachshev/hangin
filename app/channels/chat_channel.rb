@@ -5,12 +5,11 @@ class ChatChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    current_user.chats.pop Chat.find(params[:id])
-    # Any cleanup needed when channel is unsubscribed
+
   end
 
   def speak(data)
-    message = Chat.find(params[:id]).messages.create! user_id: current_user.id, body: data['body'],kind: data['kind'].to_sym, status: data['status'].to_sym
+    message = Chat.find(params[:id]).messages.create! user_id: current_user.id, body: data['body'],kind: data['kind'].to_sym, status: data['status'].to_sym, user_uuid: current_user.uuid
     ActionCable.server.broadcast "chat_channel#{params[:id]}", {message:}
   end
 end
