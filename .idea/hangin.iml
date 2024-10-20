@@ -78,6 +78,7 @@
     <orderEntry type="library" scope="PROVIDED" name="puma (v5.6.8, asdf: 3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="racc (v1.8.1, asdf: 3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rack (v2.2.9, asdf: 3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rack-cors (v2.0.2, asdf: 3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rack-test (v2.1.0, asdf: 3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rails (v7.0.8.4, asdf: 3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rails-dom-testing (v2.2.0, asdf: 3.2.2) [gem]" level="application" />
@@ -112,6 +113,14 @@
         <option value="benchmark" />
         <option value="channel" />
         <option value="controller" />
+        <option value="doorkeeper:application_owner" />
+        <option value="doorkeeper:confidential_applications" />
+        <option value="doorkeeper:enable_polymorphic_resource_owner" />
+        <option value="doorkeeper:install" />
+        <option value="doorkeeper:migration" />
+        <option value="doorkeeper:pkce" />
+        <option value="doorkeeper:previous_refresh_token" />
+        <option value="doorkeeper:views" />
         <option value="generator" />
         <option value="integration_test" />
         <option value="job" />
@@ -149,6 +158,14 @@
         <option value="benchmark" />
         <option value="channel" />
         <option value="controller" />
+        <option value="doorkeeper:application_owner" />
+        <option value="doorkeeper:confidential_applications" />
+        <option value="doorkeeper:enable_polymorphic_resource_owner" />
+        <option value="doorkeeper:install" />
+        <option value="doorkeeper:migration" />
+        <option value="doorkeeper:pkce" />
+        <option value="doorkeeper:previous_refresh_token" />
+        <option value="doorkeeper:views" />
         <option value="generator" />
         <option value="integration_test" />
         <option value="job" />

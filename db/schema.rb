@@ -10,10 +10,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_19_231513) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_20_141749) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "chats", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "chats_users", id: false, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "chat_id", null: false
+    t.index ["chat_id", "user_id"], name: "index_chats_users_on_chat_id_and_user_id"
+    t.index ["user_id", "chat_id"], name: "index_chats_users_on_user_id_and_chat_id"
+  end
+
+  create_table "contacts", id: false, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "contact_id", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.integer "kind", null: false
+    t.integer "status", null: false
+    t.bigint "user_id", null: false
+    t.bigint "chat_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_uuid"
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
@@ -38,6 +70,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_231513) do
     t.datetime "created_at", null: false
     t.datetime "revoked_at"
     t.string "previous_refresh_token", default: "", null: false
+    t.integer "application_id"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
@@ -62,7 +95,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_231513) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.boolean "online", default: false, null: false
   end
 
+  add_foreign_key "chats", "users"
+  add_foreign_key "messages", "chats"
+  add_foreign_key "messages", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
 end

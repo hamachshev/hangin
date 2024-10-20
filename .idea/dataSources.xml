@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/hangin</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="postgres@amazon" uuid="99ab09d1-c24e-432d-b3a1-53d40ea97641">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://hangin-db.cp8eaics0ilp.us-east-1.rds.amazonaws.com:5432/hangin</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
