@@ -6,12 +6,12 @@ Doorkeeper.configure do
   orm :active_record
 
   # This block will be called to check whether the resource owner is authenticated or not.
-  resource_owner_authenticator do
-    raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
-    # Put your resource owner authentication logic here.
-    # Example implementation:
-    #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
-  end
+  # resource_owner_authenticator do
+  #   raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
+  #   # Put your resource owner authentication logic here.
+  #   # Example implementation:
+  #   #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
+  # end
 
   resource_owner_from_credentials do |routes|
     account_sid = ENV['TWILIO_ACCOUNT_SID']
@@ -389,7 +389,7 @@ Doorkeeper.configure do
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.2
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.3
   #
-  grant_flows %w[password]
+  grant_flows %w[password refresh_token]
 
   # Allows to customize OAuth grant flows that +each+ application support.
   # You can configure a custom block (or use a class respond to `#call`) that must
@@ -459,7 +459,9 @@ Doorkeeper.configure do
 
   # suggested by https://github.com/doorkeeper-gem/doorkeeper/pull/1032 and elaborated by chatgpt with prompt "after sucessful response doorkeeper"
   after_successful_strategy_response do |request, response|
-    response.body[:uuid] = request.resource_owner.uuid
+    if request.grant_type == 'password'
+      response.body[:uuid] = request.resource_owner.uuid
+    end
   end
 
   # Hook into Authorization flow in order to implement Single Sign Out
