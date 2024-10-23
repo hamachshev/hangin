@@ -38,6 +38,11 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 # process behavior so workers use less memory.
 #
 # preload_app!
+rails_env = ENV['RAILS_ENV'] || "production"
+if rails_env == "production"
+  bind "unix:///var/run/puma.sock"
+  pidfile "/var/run/puma.sock"
+end
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
