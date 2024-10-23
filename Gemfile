@@ -54,3 +54,4 @@ gem "dotenv", "~> 3.1"
 gem "doorkeeper", "~> 5.7"
 
 gem "pg", "~> 1.5"
+
