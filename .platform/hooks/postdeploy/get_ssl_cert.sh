@@ -1,0 +1,1 @@
+sudo certbot certonly --nginx -n --agree-tos -d $(/opt/elasticbeanstalk/bin/get-config environment -k CERTBOT_DOMAINS) --email $(/opt/elasticbeanstalk/bin/get-config environment -k CERTBOT_EMAIL)
