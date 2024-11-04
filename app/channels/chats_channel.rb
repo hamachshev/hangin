@@ -38,7 +38,7 @@ class ChatsChannel < ApplicationCable::Channel
             chat.update ended: DateTime.current
             (ActionCable.server.broadcast "chats_channel#{chatUsers[0].id}", {deleteChat: chat.id}) unless chatUsers.count == 0
           end
-          current_user.contacts.each do |contact|
+          current_user.contacts.each do |contact| #not sure if this is right anymore
             if (contact.online?) && !(chat.users.include? contact)
               ActionCable.server.broadcast "chats_channel#{contact.id}", {deleteChat: chat.id}
             end
@@ -54,6 +54,7 @@ class ChatsChannel < ApplicationCable::Channel
     chat = current_user.chats_started.create!
    current_user.chats << chat unless current_user.chats.include? chat
     current_user.contacts.each { |contact|
+      contact.reload #need this because otherwise rails uses cached version which is not online when this method is created. without this if you turn on one session before another the second one works and the first one does not
       if contact.online?
         ActionCable.server.broadcast "chats_channel#{contact.id}", { chat: {id: chat.id}}
       end

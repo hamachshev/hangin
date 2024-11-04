@@ -1,7 +1,7 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
     chat  = Chat.find(params[:id])
-    current_user.chats << chat
+    current_user.chats << chat unless current_user.chats.include? chat # need the unless because otherwize if you make a chat and then subscribe then its in your chats twice and then in subscribed action in chats channel it sends two messages of same chat
     stream_from "chat_channel#{params[:id]}"
     messages = Chat.find(params[:id]).messages.map do |message|
       {
