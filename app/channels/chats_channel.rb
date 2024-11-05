@@ -14,7 +14,19 @@ class ChatsChannel < ApplicationCable::Channel
       end
     end
     # ActionCable.server.broadcast "chats_channel#{current_user.id}", {chats: chats.map { |chat| chat.id }}
-    transmit({chats: chats.map { |chat| chat.id }})
+
+    # transmit({chats: chats.map { |chat| chat.id }})
+
+    transmit({
+               chats: chats.map { |chat| {id: chat.id, users: (chat.users.filter {|user| user.online?}).map {|user|
+                 {
+                   first_name: user.first_name,
+                   last_name: user.last_name,
+                   uuid: user.uuid,
+                   number: user.number,
+                 }
+
+               } }}})
 
   end
 
@@ -60,7 +72,17 @@ class ChatsChannel < ApplicationCable::Channel
       end
     }
 
-    transmit({ownChat: chat.id})
+    transmit({ownChat: { id:chat.id, users: (chat.users.filter {|user| user.online?}).map {|user|
+      {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        uuid: user.uuid,
+        number: user.number,
+      }
+
+    }
+
+    }})
 
   end
 end
