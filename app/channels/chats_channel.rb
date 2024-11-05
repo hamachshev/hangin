@@ -28,6 +28,24 @@ class ChatsChannel < ApplicationCable::Channel
 
                } }}})
 
+    #trnsmit (send to self) all online contacts'
+    contacts = []
+    current_user.contacts.each do |contact|
+      if contact.online?
+        contacts << contact
+        ActionCable.server.broadcast "chats_channel#{contact.id}", {contactOnline:{
+          first_name: current_user.first_name,
+          last_name: current_user.last_name,
+          uuid: current_user.uuid,
+          number: current_user.number,
+        }}
+      end
+    end
+
+    transmit({contactsOnline: contacts})
+    #send online status to all online contacts
+
+
   end
 
   def unsubscribed
@@ -38,6 +56,15 @@ class ChatsChannel < ApplicationCable::Channel
     #     chat.update ended: DateTime.current
     #   end
     # }
+
+    #update offline status to all contacts
+
+    current_user.contacts.each do |contact|
+      contact.reload
+      if contact.online?
+        ActionCable.server.broadcast "chats_channel#{contact.id}", {contactOffline: current_user.uuid}
+      end
+    end
 
     puts "______________________________________"
     puts "unsubscribing..."
@@ -68,7 +95,18 @@ class ChatsChannel < ApplicationCable::Channel
     current_user.contacts.each { |contact|
       contact.reload #need this because otherwise rails uses cached version which is not online when this method is created. without this if you turn on one session before another the second one works and the first one does not
       if contact.online?
-        ActionCable.server.broadcast "chats_channel#{contact.id}", { chat: {id: chat.id}}
+        ActionCable.server.broadcast "chats_channel#{contact.id}", {chat: { id:chat.id, users: (chat.users.filter {|user| user.online?}).map {|user|
+          {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            uuid: user.uuid,
+            number: user.number,
+          }
+
+        }
+
+        }
+        }
       end
     }
 
