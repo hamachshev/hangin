@@ -40,6 +40,7 @@ Rails.application.configure do
 
   config.action_cable.disable_request_forgery_protection = true #need for app
 
+  config.active_storage.service = :amazon #set to store blobs in aws
 
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
