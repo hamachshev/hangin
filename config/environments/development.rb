@@ -65,4 +65,7 @@ Rails.application.configure do
   config.action_cable.disable_request_forgery_protection = true
 
   config.force_ssl = false
+
+  # config/environments/development.rb
+  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
 end

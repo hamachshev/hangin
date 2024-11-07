@@ -24,6 +24,7 @@ class ChatsChannel < ApplicationCable::Channel
                    last_name: user.last_name,
                    uuid: user.uuid,
                    number: user.number,
+                   profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic, disposition: "inline") : nil
                  }
 
                } }}})
@@ -32,12 +33,19 @@ class ChatsChannel < ApplicationCable::Channel
     contacts = []
     current_user.contacts.each do |contact|
       if contact.online?
-        contacts << contact
+        contacts << {
+          first_name: contact.first_name,
+          last_name: contact.last_name,
+          uuid: contact.uuid,
+          number: contact.number,
+          profile_pic: contact.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(contact.profile_pic, disposition: "inline") : nil
+        }
         ActionCable.server.broadcast "chats_channel#{contact.id}", {contactOnline:{
           first_name: current_user.first_name,
           last_name: current_user.last_name,
           uuid: current_user.uuid,
           number: current_user.number,
+          profile_pic: current_user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(current_user.profile_pic, disposition: "inline") : nil
         }}
       end
     end
@@ -101,6 +109,7 @@ class ChatsChannel < ApplicationCable::Channel
             last_name: user.last_name,
             uuid: user.uuid,
             number: user.number,
+            profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic, disposition: "inline") : nil
           }
 
         }
@@ -116,6 +125,7 @@ class ChatsChannel < ApplicationCable::Channel
         last_name: user.last_name,
         uuid: user.uuid,
         number: user.number,
+        profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic, disposition: "inline") : nil
       }
 
     }

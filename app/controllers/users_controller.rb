@@ -14,7 +14,7 @@ class UsersController < ApplicationController
       if user.save
         user.reload
         render json: user.as_json(only: [:first_name, :last_name]).merge(
-          profile_pic: rails_blob_url(user.profile_pic, disposition: "inline"))
+          profile_pic: user.profile_pic.attached? ? rails_blob_url(user.profile_pic, disposition: "inline") : nil)
 
       end
     else
