@@ -89,4 +89,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  #chatgpt need this because there is no requset with active storage so need a default host
+  Rails.application.routes.default_url_options[:host] = 'hangin.cc'
+  Rails.application.routes.default_url_options[:protocol] = 'https'
 end
