@@ -18,7 +18,10 @@ class ChatsChannel < ApplicationCable::Channel
     # transmit({chats: chats.map { |chat| chat.id }})
 
     transmit({
-               chats: chats.map { |chat| {id: chat.id, users: (chat.users.filter {|user| user.online?}).map {|user|
+               chats: chats.map { |chat| {
+                 id: chat.id,
+                 name: chat.name,
+                 users: (chat.users.filter {|user| user.online?}).map {|user|
                  {
                    first_name: user.first_name,
                    last_name: user.last_name,
@@ -97,13 +100,17 @@ class ChatsChannel < ApplicationCable::Channel
     # current_user.chats.destroy #Chat.find(params[:id]) #think about this later
   end
 
-  def createChat
+  def createChat(data)
     chat = current_user.chats_started.create!
+    chat.update name: data['name']
    current_user.chats << chat unless current_user.chats.include? chat
     current_user.contacts.each { |contact|
       contact.reload #need this because otherwise rails uses cached version which is not online when this method is created. without this if you turn on one session before another the second one works and the first one does not
       if contact.online?
-        ActionCable.server.broadcast "chats_channel#{contact.id}", {chat: { id:chat.id, users: (chat.users.filter {|user| user.online?}).map {|user|
+        ActionCable.server.broadcast "chats_channel#{contact.id}", {
+          chat: { id:chat.id,
+                  name: chat.name,
+                  users: (chat.users.filter {|user| user.online?}).map {|user|
           {
             first_name: user.first_name,
             last_name: user.last_name,
@@ -119,7 +126,10 @@ class ChatsChannel < ApplicationCable::Channel
       end
     }
 
-    transmit({ownChat: { id:chat.id, users: (chat.users.filter {|user| user.online?}).map {|user|
+    transmit({ownChat: {
+      id:chat.id,
+      name: chat.name,
+      users: (chat.users.filter {|user| user.online?}).map {|user|
       {
         first_name: user.first_name,
         last_name: user.last_name,

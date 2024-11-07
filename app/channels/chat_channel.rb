@@ -7,7 +7,10 @@ class ChatChannel < ApplicationCable::Channel
     chat.users.reload
     chat.users.each do |user|
       #send the updated chat to the users of the chat
-        ActionCable.server.broadcast "chats_channel#{user.id}", {updateChat: { id:chat.id, users: (chat.users.filter {|user| user.online?}).map {|user|
+        ActionCable.server.broadcast "chats_channel#{user.id}", {updateChat: {
+          id:chat.id,
+          name: chat.name,
+          users: (chat.users.filter {|user| user.online?}).map {|user|
           {
             first_name: user.first_name,
             last_name: user.last_name,
@@ -21,7 +24,10 @@ class ChatChannel < ApplicationCable::Channel
         }}
       #send the updated chat to the user's contacts if they are not members of the chat
       user.contacts.each do |contact|
-        ActionCable.server.broadcast "chats_channel#{contact.id}", {updateChat: { id:chat.id, users: (chat.users.filter {|user| user.online?}).map {|user|
+        ActionCable.server.broadcast "chats_channel#{contact.id}", {updateChat: {
+          id:chat.id,
+          name: chat.name,
+          users: (chat.users.filter {|user| user.online?}).map {|user|
           {
             first_name: user.first_name,
             last_name: user.last_name,
