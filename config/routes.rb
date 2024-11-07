@@ -10,7 +10,10 @@ Rails.application.routes.draw do
   patch "/user/" => "users#update"
   get "/user/" => "users#show"
 
+  post "/user/addProfilePicture" => "users#add_picture"
   root "pages#index"
+
+  # get 'storage/*path', to: 'rails/active_storage/blobs#redirect'
 
 
 end

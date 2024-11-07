@@ -55,3 +55,6 @@ gem "doorkeeper", "~> 5.7"
 
 gem "pg", "~> 1.5"
 
+gem "aws-sdk-s3", require: false
+
+

@@ -8,4 +8,6 @@ class User < ApplicationRecord
   has_many :chats_started, class_name: "Chat"
   has_many :messages
   has_and_belongs_to_many :chats
+
+  has_one_attached :profile_pic
 end
