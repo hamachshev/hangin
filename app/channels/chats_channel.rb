@@ -5,7 +5,7 @@ class ChatsChannel < ApplicationCable::Channel
 
     chats = []
     current_user.contacts.each do |contact|
-      if (contact.contacts.include? current_user) && (contact.online?)
+      if (contact.contacts.include? current_user) && (contact.online?) #get all unended chats that current_users contacts have joined
         contact.chats.each do |chat|
           if chat.ended == nil
             chats << chat
@@ -27,12 +27,12 @@ class ChatsChannel < ApplicationCable::Channel
                    last_name: user.last_name,
                    uuid: user.uuid,
                    number: user.number,
-                   profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic, disposition: "inline") : nil
+                   profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic) : nil
                  }
 
                } }}})
 
-    #trnsmit (send to self) all online contacts'
+    #trnsmit (send to self) all online contacts
     contacts = []
     current_user.contacts.each do |contact|
       if contact.online?
@@ -41,14 +41,15 @@ class ChatsChannel < ApplicationCable::Channel
           last_name: contact.last_name,
           uuid: contact.uuid,
           number: contact.number,
-          profile_pic: contact.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(contact.profile_pic, disposition: "inline") : nil
+          profile_pic: contact.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(contact.profile_pic) : nil
         }
+        #send self (online) to contacts
         ActionCable.server.broadcast "chats_channel#{contact.id}", {contactOnline:{
           first_name: current_user.first_name,
           last_name: current_user.last_name,
           uuid: current_user.uuid,
           number: current_user.number,
-          profile_pic: current_user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(current_user.profile_pic, disposition: "inline") : nil
+          profile_pic: current_user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(current_user.profile_pic) : nil
         }}
       end
     end
@@ -116,7 +117,7 @@ class ChatsChannel < ApplicationCable::Channel
             last_name: user.last_name,
             uuid: user.uuid,
             number: user.number,
-            profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic, disposition: "inline") : nil
+            profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic) : nil
           }
 
         }
@@ -135,12 +136,22 @@ class ChatsChannel < ApplicationCable::Channel
         last_name: user.last_name,
         uuid: user.uuid,
         number: user.number,
-        profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic, disposition: "inline") : nil
+        profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic) : nil
       }
 
     }
 
     }})
 
+  end
+
+  def went_to_background
+    current_user.update last_foreground: Time.current
+    current_user.chats.each do |chat|
+      if chat.ended != nil
+        stop_stream_from "chat_channel#{chat.id}"
+      end
+    end
+    stop_stream_from "chats_channel#{current_user.id}"
   end
 end

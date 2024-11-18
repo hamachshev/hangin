@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+
+
+  resources :friends, only: [:index, :create]
+  # get "/contacts", to: "friends#get_contacts"
   mount ActionCable.server => '/cable'
 
   use_doorkeeper
@@ -11,6 +15,8 @@ Rails.application.routes.draw do
   get "/user/" => "users#show"
 
   post "/user/addProfilePicture" => "users#add_picture"
+  post "/user/registerIOSDevice" => "users#registerIOSDevice"
+  post "/notifications/invite" => "notifications#sendInviteNotification"
   root "pages#index"
 
   # get 'storage/*path', to: 'rails/active_storage/blobs#redirect'

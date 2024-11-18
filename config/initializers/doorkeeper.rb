@@ -31,6 +31,13 @@ Doorkeeper.configure do
       user = User.find_by(number: params[:number])
       if user.nil?
         user = User.create(number: params[:number])
+        User.all.each do |existingUser| # go thru all existing users
+          existingUser.friends.each do |friend| # for each, go thru their friends
+            if friend.number == user.number # if oone of their friends is this new user
+              existingUser.contacts << user #add to the users contacts
+            end
+          end
+        end
       end
     end
     user

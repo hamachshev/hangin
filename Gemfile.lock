@@ -66,6 +66,9 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    apnotic (1.7.2)
+      connection_pool (~> 2)
+      net-http2 (>= 0.18.3, < 2)
     aws-eventstream (1.2.0)
     aws-partitions (1.761.0)
     aws-sdk-core (3.172.0)
@@ -87,6 +90,7 @@ GEM
       msgpack (~> 1.2)
     builder (3.3.0)
     concurrent-ruby (1.3.4)
+    connection_pool (2.4.1)
     crass (1.0.6)
     date (3.3.4)
     debug (1.9.2)
@@ -104,6 +108,7 @@ GEM
       net-http
     globalid (1.2.1)
       activesupport (>= 6.1)
+    http-2 (0.11.0)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
@@ -130,6 +135,8 @@ GEM
     msgpack (1.7.2)
     net-http (0.4.1)
       uri
+    net-http2 (0.18.5)
+      http-2 (~> 0.11)
     net-imap (0.4.16)
       date
       net-protocol
@@ -227,6 +234,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  apnotic
   aws-sdk-s3
   bootsnap
   debug

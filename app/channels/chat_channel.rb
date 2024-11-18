@@ -16,7 +16,7 @@ class ChatChannel < ApplicationCable::Channel
             last_name: user.last_name,
             uuid: user.uuid,
             number: user.number,
-            profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic, disposition: "inline") : nil
+            profile_pic: user.profile_pic.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic) : nil
           }
 
         }
@@ -33,7 +33,7 @@ class ChatChannel < ApplicationCable::Channel
             last_name: user.last_name,
             uuid: user.uuid,
             number: user.number,
-            profile_pic: user.profile_pic.attached? ?Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic, disposition: "inline") : nil
+            profile_pic: user.profile_pic.attached? ?Rails.application.routes.url_helpers.rails_blob_url(user.profile_pic) : nil
           }
 
         }
@@ -78,4 +78,5 @@ class ChatChannel < ApplicationCable::Channel
       body: message.body
     }}
   end
+
 end

@@ -10,4 +10,6 @@ class User < ApplicationRecord
   has_and_belongs_to_many :chats
 
   has_one_attached :profile_pic
+  has_many :friends
+
 end

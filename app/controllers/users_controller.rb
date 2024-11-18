@@ -14,13 +14,23 @@ class UsersController < ApplicationController
       if user.save
         user.reload
         render json: user.as_json(only: [:first_name, :last_name]).merge(
-          profile_pic: user.profile_pic.attached? ? rails_blob_url(user.profile_pic, disposition: "inline") : nil)
+          profile_pic: user.profile_pic.attached? ? rails_blob_url(user.profile_pic) : nil)
 
       end
     else
       render json: { errors: user.errors.full_messages }, status: 422
     end
   end
+
+  def registerIOSDevice
+    if params[:device_token].present?
+      user.update(ios_device_token: params[:device_token])
+      render status: :ok
+    else
+
+      render json: {error: "missing deviceToken"}, status: 422
+    end
+    end
   def update
     if user.update user_params
       render json: user.to_json(only: [:first_name, :last_name])
@@ -35,7 +45,7 @@ class UsersController < ApplicationController
       if user.profile_pic.attached?
         user.reload
         render json: user.as_json(only: [:first_name, :last_name]).merge(
-          profile_pic: rails_blob_url(user.profile_pic, disposition: "inline"))
+          profile_pic: rails_blob_url(user.profile_pic))
 
       else
         render json: user.as_json(only: [:first_name, :last_name]).merge(
