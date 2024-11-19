@@ -77,6 +77,29 @@ class ChatChannel < ApplicationCable::Channel
       last_name: message.user.last_name,
       body: message.body
     }}
+
+    #send notifications to users in background
+    chat = Chat.find(params[:id])
+    chat.users.each do |user|
+      if user.messages_as_notifications?
+        if user.ios_device_token.present?
+          notification = Apnotic::Notification.new user.ios_device_token
+          notification.alert = {title: "#{chat.name}\n#{message.user.first_name} #{message.user.last_name}", body: message.body}
+          notification.sound = "default"
+          notification.topic = ENV['IOS_APP_IDENTIFIER']
+          notification.custom_payload = {chat: params[:id]}
+
+          push = APNS_CONNECTION.prepare_push(notification)
+          push.on(:response) do |response|
+            print("recived APNS response")
+            print( response.status)
+            print(response.body)
+          end
+
+          APNS_CONNECTION.push_async(push)
+        end
+      end
+    end
   end
 
 end
