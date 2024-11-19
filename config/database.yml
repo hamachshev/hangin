@@ -25,6 +25,7 @@ development:
   queue:
     <<: *dev-base
     database: hangin-queue
+    migrations_paths: db/queue_migrate #need this to not copy over unrelated tables
 
 
 # Warning: The database defined as "test" will be erased and
