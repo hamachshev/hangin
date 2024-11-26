@@ -271,9 +271,6 @@
     <entry key="config/routes.rb">
       <value>file://$MODULE_DIR$/config/routes.rb</value>
     </entry>
-    <entry key="config/secrets">
-      <value>file://$MODULE_DIR$/config</value>
-    </entry>
     <entry key="db">
       <value>file://$MODULE_DIR$/db</value>
     </entry>
@@ -306,6 +303,10 @@
     </entry>
     <entry key="public/stylesheets">
       <value>file://$MODULE_DIR$/public/stylesheets</value>
+    </entry>
+    <entry key="test/mailers/previews">
+      <value>file://$MODULE_DIR$/test/mailers/previews</value>
+      <value>file://$MODULE_DIR$/test/mailers/previews</value>
     </entry>
     <entry key="tmp">
       <value>file://$MODULE_DIR$/tmp</value>
@@ -373,7 +374,22 @@
           <RakeTaskImpl id="db">
             <subtasks>
               <RakeTaskImpl description="Create the database from DATABASE_URL or config/database.yml for the current RAILS_ENV (use db:create:all to create all databases in the config). Without RAILS_ENV or when RAILS_ENV is development, it defaults to creating the development and test databases, except when DATABASE_URL is present" fullCommand="db:create" id="create" />
+              <RakeTaskImpl id="create">
+                <subtasks>
+                  <RakeTaskImpl description="Create primary database for current environment" fullCommand="db:create:primary" id="primary" />
+                  <RakeTaskImpl description="Create queue database for current environment" fullCommand="db:create:queue" id="queue" />
+                  <RakeTaskImpl description="" fullCommand="db:create:all" id="all" />
+                </subtasks>
+              </RakeTaskImpl>
               <RakeTaskImpl description="Drop the database from DATABASE_URL or config/database.yml for the current RAILS_ENV (use db:drop:all to drop all databases in the config). Without RAILS_ENV or when RAILS_ENV is development, it defaults to dropping the development and test databases, except when DATABASE_URL is present" fullCommand="db:drop" id="drop" />
+              <RakeTaskImpl id="drop">
+                <subtasks>
+                  <RakeTaskImpl description="Drop primary database for current environment" fullCommand="db:drop:primary" id="primary" />
+                  <RakeTaskImpl description="Drop queue database for current environment" fullCommand="db:drop:queue" id="queue" />
+                  <RakeTaskImpl description="" fullCommand="db:drop:_unsafe" id="_unsafe" />
+                  <RakeTaskImpl description="" fullCommand="db:drop:all" id="all" />
+                </subtasks>
+              </RakeTaskImpl>
               <RakeTaskImpl id="encryption">
                 <subtasks>
                   <RakeTaskImpl description="Generate a set of keys for configuring Active Record encryption in a given environment" fullCommand="db:encryption:init" id="init" />
@@ -394,15 +410,54 @@
               <RakeTaskImpl id="migrate">
                 <subtasks>
                   <RakeTaskImpl description="Run the &quot;down&quot; for a given migration VERSION" fullCommand="db:migrate:down" id="down" />
+                  <RakeTaskImpl id="down">
+                    <subtasks>
+                      <RakeTaskImpl description="Run the &quot;down&quot; on primary database for a given migration VERSION" fullCommand="db:migrate:down:primary" id="primary" />
+                      <RakeTaskImpl description="Run the &quot;down&quot; on queue database for a given migration VERSION" fullCommand="db:migrate:down:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
+                  <RakeTaskImpl description="Migrate primary database for current environment" fullCommand="db:migrate:primary" id="primary" />
+                  <RakeTaskImpl description="Migrate queue database for current environment" fullCommand="db:migrate:queue" id="queue" />
                   <RakeTaskImpl description="Roll back the database one migration and re-migrate up (options: STEP=x, VERSION=x)" fullCommand="db:migrate:redo" id="redo" />
+                  <RakeTaskImpl id="redo">
+                    <subtasks>
+                      <RakeTaskImpl description="Roll back primary database one migration and re-migrate up (options: STEP=x, VERSION=x)" fullCommand="db:migrate:redo:primary" id="primary" />
+                      <RakeTaskImpl description="Roll back queue database one migration and re-migrate up (options: STEP=x, VERSION=x)" fullCommand="db:migrate:redo:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
                   <RakeTaskImpl description="Display status of migrations" fullCommand="db:migrate:status" id="status" />
+                  <RakeTaskImpl id="status">
+                    <subtasks>
+                      <RakeTaskImpl description="Display status of migrations for primary database" fullCommand="db:migrate:status:primary" id="primary" />
+                      <RakeTaskImpl description="Display status of migrations for queue database" fullCommand="db:migrate:status:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
                   <RakeTaskImpl description="Run the &quot;up&quot; for a given migration VERSION" fullCommand="db:migrate:up" id="up" />
+                  <RakeTaskImpl id="up">
+                    <subtasks>
+                      <RakeTaskImpl description="Run the &quot;up&quot; on primary database for a given migration VERSION" fullCommand="db:migrate:up:primary" id="primary" />
+                      <RakeTaskImpl description="Run the &quot;up&quot; on queue database for a given migration VERSION" fullCommand="db:migrate:up:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
                   <RakeTaskImpl description="" fullCommand="db:migrate:reset" id="reset" />
                 </subtasks>
               </RakeTaskImpl>
               <RakeTaskImpl description="Run setup if database does not exist, or run migrations if it does" fullCommand="db:prepare" id="prepare" />
               <RakeTaskImpl description="Drop and recreate all databases from their schema for the current environment and load the seeds" fullCommand="db:reset" id="reset" />
+              <RakeTaskImpl id="reset">
+                <subtasks>
+                  <RakeTaskImpl description="Drop and recreate the primary database from its schema for the current environment and load the seeds" fullCommand="db:reset:primary" id="primary" />
+                  <RakeTaskImpl description="Drop and recreate the queue database from its schema for the current environment and load the seeds" fullCommand="db:reset:queue" id="queue" />
+                  <RakeTaskImpl description="" fullCommand="db:reset:all" id="all" />
+                </subtasks>
+              </RakeTaskImpl>
               <RakeTaskImpl description="Roll the schema back to the previous version (specify steps w/ STEP=n)" fullCommand="db:rollback" id="rollback" />
+              <RakeTaskImpl id="rollback">
+                <subtasks>
+                  <RakeTaskImpl description="Rollback primary database for current environment (specify steps w/ STEP=n)" fullCommand="db:rollback:primary" id="primary" />
+                  <RakeTaskImpl description="Rollback queue database for current environment (specify steps w/ STEP=n)" fullCommand="db:rollback:queue" id="queue" />
+                </subtasks>
+              </RakeTaskImpl>
               <RakeTaskImpl id="schema">
                 <subtasks>
                   <RakeTaskImpl id="cache">
@@ -412,7 +467,19 @@
                     </subtasks>
                   </RakeTaskImpl>
                   <RakeTaskImpl description="Create a database schema file (either db/schema.rb or db/structure.sql, depending on `ENV['SCHEMA_FORMAT']` or `config.active_record.schema_format`)" fullCommand="db:schema:dump" id="dump" />
+                  <RakeTaskImpl id="dump">
+                    <subtasks>
+                      <RakeTaskImpl description="Create a database schema file (either db/schema.rb or db/structure.sql, depending on `ENV['SCHEMA_FORMAT']` or `config.active_record.schema_format`) for primary database" fullCommand="db:schema:dump:primary" id="primary" />
+                      <RakeTaskImpl description="Create a database schema file (either db/schema.rb or db/structure.sql, depending on `ENV['SCHEMA_FORMAT']` or `config.active_record.schema_format`) for queue database" fullCommand="db:schema:dump:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
                   <RakeTaskImpl description="Load a database schema file (either db/schema.rb or db/structure.sql, depending on `ENV['SCHEMA_FORMAT']` or `config.active_record.schema_format`) into the database" fullCommand="db:schema:load" id="load" />
+                  <RakeTaskImpl id="load">
+                    <subtasks>
+                      <RakeTaskImpl description="Load a database schema file (either db/schema.rb or db/structure.sql, depending on `ENV['SCHEMA_FORMAT']` or `config.active_record.schema_format`) into the primary database" fullCommand="db:schema:load:primary" id="primary" />
+                      <RakeTaskImpl description="Load a database schema file (either db/schema.rb or db/structure.sql, depending on `ENV['SCHEMA_FORMAT']` or `config.active_record.schema_format`) into the queue database" fullCommand="db:schema:load:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
                 </subtasks>
               </RakeTaskImpl>
               <RakeTaskImpl description="Load the seed data from db/seeds.rb" fullCommand="db:seed" id="seed" />
@@ -422,23 +489,37 @@
                 </subtasks>
               </RakeTaskImpl>
               <RakeTaskImpl description="Create all databases, load all schemas, and initialize with the seed data (use db:reset to also drop all databases first)" fullCommand="db:setup" id="setup" />
+              <RakeTaskImpl id="setup">
+                <subtasks>
+                  <RakeTaskImpl description="Create the primary database, load the schema, and initialize with the seed data (use db:reset:primary to also drop the database first)" fullCommand="db:setup:primary" id="primary" />
+                  <RakeTaskImpl description="Create the queue database, load the schema, and initialize with the seed data (use db:reset:queue to also drop the database first)" fullCommand="db:setup:queue" id="queue" />
+                  <RakeTaskImpl description="" fullCommand="db:setup:all" id="all" />
+                </subtasks>
+              </RakeTaskImpl>
               <RakeTaskImpl description="Retrieve the current schema version number" fullCommand="db:version" id="version" />
+              <RakeTaskImpl id="version">
+                <subtasks>
+                  <RakeTaskImpl description="Retrieve the current schema version number for primary database" fullCommand="db:version:primary" id="primary" />
+                  <RakeTaskImpl description="Retrieve the current schema version number for queue database" fullCommand="db:version:queue" id="queue" />
+                </subtasks>
+              </RakeTaskImpl>
               <RakeTaskImpl description="" fullCommand="db:_dump" id="_dump" />
+              <RakeTaskImpl id="_dump">
+                <subtasks>
+                  <RakeTaskImpl description="" fullCommand="db:_dump:primary" id="primary" />
+                  <RakeTaskImpl description="" fullCommand="db:_dump:queue" id="queue" />
+                </subtasks>
+              </RakeTaskImpl>
               <RakeTaskImpl description="" fullCommand="db:abort_if_pending_migrations" id="abort_if_pending_migrations" />
+              <RakeTaskImpl id="abort_if_pending_migrations">
+                <subtasks>
+                  <RakeTaskImpl description="" fullCommand="db:abort_if_pending_migrations:primary" id="primary" />
+                  <RakeTaskImpl description="" fullCommand="db:abort_if_pending_migrations:queue" id="queue" />
+                </subtasks>
+              </RakeTaskImpl>
               <RakeTaskImpl description="" fullCommand="db:charset" id="charset" />
               <RakeTaskImpl description="" fullCommand="db:check_protected_environments" id="check_protected_environments" />
               <RakeTaskImpl description="" fullCommand="db:collation" id="collation" />
-              <RakeTaskImpl id="create">
-                <subtasks>
-                  <RakeTaskImpl description="" fullCommand="db:create:all" id="all" />
-                </subtasks>
-              </RakeTaskImpl>
-              <RakeTaskImpl id="drop">
-                <subtasks>
-                  <RakeTaskImpl description="" fullCommand="db:drop:_unsafe" id="_unsafe" />
-                  <RakeTaskImpl description="" fullCommand="db:drop:all" id="all" />
-                </subtasks>
-              </RakeTaskImpl>
               <RakeTaskImpl description="" fullCommand="db:forward" id="forward" />
               <RakeTaskImpl description="" fullCommand="db:load_config" id="load_config" />
               <RakeTaskImpl description="" fullCommand="db:purge" id="purge" />
@@ -447,21 +528,29 @@
                   <RakeTaskImpl description="" fullCommand="db:purge:all" id="all" />
                 </subtasks>
               </RakeTaskImpl>
-              <RakeTaskImpl id="reset">
-                <subtasks>
-                  <RakeTaskImpl description="" fullCommand="db:reset:all" id="all" />
-                </subtasks>
-              </RakeTaskImpl>
-              <RakeTaskImpl id="setup">
-                <subtasks>
-                  <RakeTaskImpl description="" fullCommand="db:setup:all" id="all" />
-                </subtasks>
-              </RakeTaskImpl>
               <RakeTaskImpl id="test">
                 <subtasks>
                   <RakeTaskImpl description="" fullCommand="db:test:load_schema" id="load_schema" />
+                  <RakeTaskImpl id="load_schema">
+                    <subtasks>
+                      <RakeTaskImpl description="" fullCommand="db:test:load_schema:primary" id="primary" />
+                      <RakeTaskImpl description="" fullCommand="db:test:load_schema:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
                   <RakeTaskImpl description="" fullCommand="db:test:prepare" id="prepare" />
+                  <RakeTaskImpl id="prepare">
+                    <subtasks>
+                      <RakeTaskImpl description="" fullCommand="db:test:prepare:primary" id="primary" />
+                      <RakeTaskImpl description="" fullCommand="db:test:prepare:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
                   <RakeTaskImpl description="" fullCommand="db:test:purge" id="purge" />
+                  <RakeTaskImpl id="purge">
+                    <subtasks>
+                      <RakeTaskImpl description="" fullCommand="db:test:purge:primary" id="primary" />
+                      <RakeTaskImpl description="" fullCommand="db:test:purge:queue" id="queue" />
+                    </subtasks>
+                  </RakeTaskImpl>
                 </subtasks>
               </RakeTaskImpl>
               <RakeTaskImpl description="" fullCommand="db:truncate_all" id="truncate_all" />
