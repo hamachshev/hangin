@@ -118,6 +118,56 @@ You will then need to request a new token using the refresh token.
 ```
 * This is an array of all the friends created
 
+## Get Contacts and Friends for Invite to chat
+* Friend = contact that is not on hangin and Contact = friend that has a hangin account
+
+* **GET** to `base_url/friends`
+* Authorization header is set to `Bearer insert_access_token_here`
+* Sucessful response
+
+```json
+{
+	"friends":[
+		{
+			"first_name": "george",
+			"last_name": "washington",
+			"number": "9883338899"
+		}
+	],
+	"contacts": [
+					{
+					            "uuid": "flkjajklfdsafsdjkl898u",
+					            "first_name": "George",
+					            "last_name": "Washington",
+					            "number": "8997777777",
+					            "profile_pic":"https://www.afjklds.com/profilepic.jpeg"
+					}
+	
+	]
+}
+```
+
+## Invite contacts to a chat
+
+
+* **POST** to `base_url/notifications/invite`
+* Content-Type header is equal to application/json
+* Authorization header is set to `Bearer insert_access_token_here`
+* Body of request:
+
+```json
+{
+	"chat_id": "insert_chat_id_here",
+	"users_to_invite" [
+		"user_uuid_one0945809853409834059",
+		"user_uuid_two9084238095234"
+	]
+	
+}
+```
+
+* Sucessful response -- is a 204 response with with no body
+
 ## Connect to the websocket
 
 * URL is `wss://base_url/cable`
