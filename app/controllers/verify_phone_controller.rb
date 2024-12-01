@@ -8,7 +8,7 @@ class VerifyPhoneController < ApplicationController
     verification = @client
                      .verify
                      .v2
-                     .services('VA791034a44b0bc8e4fede66dfb91e7e1a')
+                     .services(ENV['TWILIO_SERVICE_SID'])
                      .verifications
                      .create(
                        to: '+1' + params[:number],

@@ -13,6 +13,7 @@ Doorkeeper.configure do
   #   #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
   # end
 
+  # old sid 'VA791034a44b0bc8e4fede66dfb91e7e1a'
   resource_owner_from_credentials do |routes|
     account_sid = ENV['TWILIO_ACCOUNT_SID']
     auth_token = ENV['TWILIO_AUTH_TOKEN']
@@ -20,7 +21,7 @@ Doorkeeper.configure do
     verification_check = @client
                            .verify
                            .v2
-                           .services('VA791034a44b0bc8e4fede66dfb91e7e1a')
+                           .services(ENV['TWILIO_SERVICE_SID'])
                            .verification_checks
                            .create(
                              to: '+1' + params[:number],
@@ -33,7 +34,7 @@ Doorkeeper.configure do
         user = User.create(number: params[:number])
         User.all.each do |existingUser| # go thru all existing users
           existingUser.friends.each do |friend| # for each, go thru their friends
-            if friend.number == user.number # if oone of their friends is this new user
+            if friend.number == user.number # if one of their friends is this new user
               existingUser.contacts << user #add to the users contacts
             end
           end
