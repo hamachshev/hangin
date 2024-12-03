@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /var/app/current
-./bin/jobs
+./bin/jobs &
