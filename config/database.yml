@@ -49,3 +49,4 @@ production:
   queue:
     <<: *default
     database: hangin-queue
+    migrations_paths: db/queue_migrate #need this to not copy over unrelated tables
