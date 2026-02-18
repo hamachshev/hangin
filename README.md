@@ -1,11 +1,13 @@
-# README
-
+# Hangin' (Backend)
+Hangin is a real-time chat app that allows you to jump into your friends ongoing conversations and join the party 🎉!
+This is the backend of hangin' built with Rails.
+## Running the backend
 To start the application run
 `rails s`
 and then `bin/rails` and then `ngrok start hangin` (if you want to use ngrok, but you must add config in ngrok config and change `ENV[base-domain]`-- todo)
 
 Base url = `base_url`
-# API
+# API docs
 
 ## Request OTP
 * **POST** to `base_url/create?number=` with the number to send the OTP code to
