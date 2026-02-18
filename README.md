@@ -3,6 +3,10 @@
 
 Hangin is a real-time chat app that allows you to jump into your friends ongoing conversations and join the party 🎉!
 This is the backend of hangin' built with Rails.
+
+Front ends can be found here:
+- [iOS - SwiftUI](https://github.com/hamachshev/hanginIOSapp)
+- [Web - React](https://github.com/hamachshev/hanginWebAppReact)
 ## Running the backend
 To start the application run
 `rails s`
