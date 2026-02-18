@@ -1,4 +1,6 @@
-# Hangin' (Backend)
+![hangin-logo](https://github.com/user-attachments/assets/0deb9492-0f18-44c9-99bf-7dd06c49b255)
+# Hangin' (Backend) 
+
 Hangin is a real-time chat app that allows you to jump into your friends ongoing conversations and join the party 🎉!
 This is the backend of hangin' built with Rails.
 ## Running the backend
